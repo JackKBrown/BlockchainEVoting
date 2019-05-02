@@ -4,12 +4,14 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    
     <title>Blockchain E-Voting</title>
-
-    <!-- Bootstrap and css-->
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    
+    <!-- Bootstrap -->
     <link href="vendor/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="main.css">  
+
+    <link rel="stylesheet" type="text/css" href="main.css">
     
   </head>
   <body>
@@ -47,27 +49,19 @@
         <main role="main" class="col-lg-12 d-flex justify-content-center">
           
           <div id="loader" class="text-center">
-            <p class="text-center"> Election Address</p>
-            <form onSubmit="Vote.loadElection(); return false;">
-              <input id="oldMemLoc" type="text" class="form-control" placeholder="Location" required>
-              <input type="submit" hidden="">
+            <h1 class="text-center"> load election</h1>
+            <form onSubmit="Authenticate.getToken(); return false;">
+              <input id="oldMemLoc" type="text" class="form-control" placeholder="Authority's address" required>
+              <input id="name" type="text" class="form-control" placeholder="name" required>
+              <input id="password" type="text" class="form-control" placeholder="password" required>
+              <input type="submit" class="text-center">
             </form>
           </div>
           
           <div id="content">
-            <form onSubmit="Vote.vote(); return false;">
-              <input id="token" type="text" class="form-control" placeholder="authenticating token" required>
-              <ul id="candList" class="list-unstyled">
-                <div class="candTemplate" class="checkbox" style="display: none">
-                  <label>
-                    <input class="input" type="radio" name="candNumber" value="" required>
-                    <span class="content">candidate name goes here...</span>
-                  </label>
-                </div>
-              </ul>
-              <input type="submit" class="text-center">
-            </form>
+
           </div>
+          
         </main>
       </div>
     </div>
@@ -78,7 +72,9 @@
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="vendor/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="vendor/truffle-contract/dist/truffle-contract.js"></script>
-    <script src="vote.js"></script>
+    
+    <script src="authenticate.js"></script>
     
   </body>
 </html>
+

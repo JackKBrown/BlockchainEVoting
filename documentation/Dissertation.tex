@@ -8,7 +8,7 @@
 
 \begin{frontmatter}
 
-\title{Formatting guidance for CSC8498 final report}
+\title{Blockchain E-Voting}
 \author{Jack Brown}
   \address{School of Computing Science, Newcastle University, UK} 
 
@@ -17,26 +17,110 @@ Write your abstract here. This should be a concise summary of what your project 
 \end{abstract}
 
 \begin{keyword}
-list the main concepts used in your project, e.g.\ the research area and techniques used.
+Blockchain, E-Voting, Smart Contracts, Ethereum, Solidity
 \end{keyword}
 \end{frontmatter}
 
-\section{Introduction}\label{sec: introduction}
+%\tableofcontents
 
-\section{What you did and how}
-\cite{BTCWhitepaper}
+\section{Introduction}
+
+E-Voting for important votes is a contentious issue due to the amount of trust required for any system facilitating these important votes. The risk of potentially inviting the consequences of unforeseen errors many view to far out way the conveniences brought about by E-Voting \cite{lauer2004risk}. We shall explore then in this paper how this implementation using smart contracts on the Blockchain helps alleviate the potential downfalls of E-Voting.
+%and the untrusted[use different word] nature of these technologies. Blockchain has emerged as another potential solution to this problem though, in this report we shall discuss the application of Blockchain to e-voting, their advantages and disadvantages, the differences between certain solutions, and conclude on the usefulness of this idea.
+
+Voting is used worldwide to decide a range of issues, different schemes of voting exist but the underlying principle is the same. A group of parties wish to decide on an issue and whichever solution gets the most support should win. For this reason voting needs to be fair and obey the rules of the vote. You need to be able to give certain guarantees of this and in E-Voting this means a system must guarantee certain properties of a vote.
+
+Blockchain was originally described in the Bitcoin white paper by Satoshi Nakamoto \cite{BTCWhitepaper}. In this paper a system for tracking ownership of a digital currency, bitcoin, was invented. The system used for this is what is commonly known today as the Blockchain.
+
+In this paper we will cover our initial aims and objectives in section two. Section three we will discuss the background material. In section four we will cover the approach taken on this
+
+\section{Aims and Objectives}
+%this could go in intro, did this last year but the original layout didn't
+\begin{center}
+    {\bf Aim}: To investigate and implement a Blockchain E-Voting algorithm that implements Verifiability, availability, transparency, and flexibility. 
+\end{center}
+\begin{itemize}
+    \item Identify desirable properties of voting and metrics for evaluation.
+    \item Design and Implement a basic application for voting
+    \item Extend the application to include the desirable properties
+    \item Evaluate and compare to other solutions.
+\end{itemize}
+
+
+\section{Background Material}
+In this section we discuss the material studied and the nature of technologies and ideas used for this dissertation.
+
+\subsection{Voting and E-Voting}
+The first question we must address here is 'why is E-Voting useful?'. Why E-voting is preferable over physical voting is hard to answer. A lot of the solutions that are brought forth by different protocols are specific to that protocol but some generic applications do exist. First is to increase the interest to vote by younger generations and individuals being unable to vote due to time constraints. In the UK individuals can vote by visiting a polling station they are registered at between 7am and 10pm \cite{pollStations}, traditionally these votes also take place on Thursdays, a working day. This can require you to go out of your way considerably and due to work can be unfeasible to do so. E-Voting could be done digitally, using any device an individual has increasing convenience and availability. A vote also does not need to be exclusively electronic meaning an adequate protocol can only serve to increase the peoples say in democracy. Beyond this is the benefits of speed and price to vote, E-Voting can be digitally counted for increased speed and accuracy without having to pay counters or administrators for polling stations.
+
+%http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.165.852
+%on the incompatible properties of voting schemes 2006
+Here we look at some Voting Properties as defined by Wang et al. \cite{RequirementOfEVoting}
+%https://pdfs.semanticscholar.org/e734/d63888d81075efa0402599ae4e43772cf2e7.pdf
+\begin{itemize}
+  \item {\bfseries Correctness}, votes should all be counted and all counted votes need to be valid. Note, this allows that invalid votes be cast just that they are not counted.
+  \item {\bfseries Privacy}, the identity of a voter, as long as that voter does not reveal it, should not be known to others.
+  \item {\bfseries Anonymity}, whether a voter is known to have cast a vote. The privacy property only guarantees that a voter's choice should not be known not whether they voted or not.
+  \item {\bfseries Fairness}, the votes cast so far should not be countable until all votes or cast or the allotted voting period has ended.
+  \item {\bfseries Unreusability}, no voter should be able to cast two ballots that are both counted in the end count.
+  \item {\bfseries Eligibility}, only those with authorisation should be able to vote.
+  \item {\bfseries Robustness}, whether and by what degree a protocol is tolerant to malicious intent and system fault.
+  \item {\bfseries Verifiable}, can and who can verify the vote..
+  \item {\bfseries Universally Verifiable}, anyone can verify the final result. 
+  \item {\bfseries E2E-Verifiable}, is it possible to verify ones ballot has been cast and counted.
+  \item {\bfseries Usability}, how easy is it to take part in the protocol.
+\end{itemize}
+
+\subsection{Blockchain}
+Blockchain is in essence a distributed ledger, a list of transactions that can be read and written to. We define a transaction as any event written to the Blockchain. The Blockchain takes the form of a linked list \cite{blockchainBeginners} where each block contains a hash, a cryptographic pseudo random reference that will change completely if the input is altered, of the previous block. This forms a traceable chain back to the original block. Transactions are recorded by validators using a consensus protocol.
+%who add them to the current block and write new blocks. Some sort of consensus is needed for this such a proof of work \cite{BTCWhitepaper}.
+
+\subsection{Types and Uses of Blockchain}
+How a Blockchain is designed will change properties of the Blockchain such as its privacy, security, and trust. The first design choice in respect to E-Voting is whether a Blockchain is permissionless or permissioned \cite{wust2018need}, in other works this is sometimes referred to as being public or private \cite{blockchainBeginners}. These definitions refer to the read and write permissions on a Blockchain. 
+Permissionless Blockchains are completely public, anyone can add their computer to the network, become a validator, add transactions to the Blockchain, or download and read the Blockchain. Bitcoin is an example of a permissionless Blockchain.
+Permissioned Blockchains restrict who can be a validator, they may also restrict who can add transactions to a Blockchain and who can read the Blockchain. The desire to make a Blockchain permissioned can come from a few sources such as economic or privacy concerns. Permissioned Blockchains come at the cost of being more centralised which means trust must be placed in some entity either the validators or an authority who delegate trust to the validators. This trust in turn is what allows the validators on a permissioned Blockchain to use different types of consensus which can be faster, more economical, and environmental than others as discussed in the next subsection.
+This question of not needing trust \cite{lemieux2016trusting} is often raised as a positive for decentralised permissionless Blockchains like bitcoin where the ability to place trust solely in the maths and code behind the algorithm is useful and this transfers across to E-Voting where the authority in charge of organising the vote might be untrusted by the voters.
+
+% For example proof of work is often used for permissionless Blockchains but this is computationally expensive the cost of running these networks can be gargantuan, according to digiconomist \cite{BTCenergy} the Bitcoin network annually uses an estimated 49.39 TeraWatt hours of electricity this is roughly equivalent to the usage of Singapore. 
+
+\subsection{Consensus and Block Construction}
+*Not too sure how much I really need to cover that I've talked about here its definitely important but not sure if this is too much off the track. Probably worth mentioning a little bit and more in a bullet pointed fashion to just note that depending on the flavour used will really affect the integrity and certainty of that integrity though the algorithm itself will not change just the trust you can have in its integrity.
+When building a Blockchain validators add transactions by appending them to the end of the current block. After a period of time that block is concluded by calculating and appending its hash. A new block is started with the previous block's hash to form the chain of blocks. Along with additional implementation dependant metadata such as time of creation. The hash provides the method of proving integrity, if one block is changed all the following block hashes will change meaning each one must be recalculated. The method of writing a block is called a consensus protocol. Proof of Work\cite{BTCWhitepaper} is one such protocol, typically used on permissionless systems it requires doing something computationally hard like finding a SHA256 hash starting with a sequence of zeros, this is the method used by Bitcoin. The problem with this is that it's computationally expensive, the cost of running these networks can be gargantuan. According to digiconomist \cite{BTCenergy} the Bitcoin network annually uses an estimated 49.39 TeraWatt hours of electricity this is roughly equivalent to the usage of Singapore. Beyond this it relies on the assumption the majority of computational power will represent an honest group of parties, this is commonly referred to as a 51\% attack\cite{BTCWhitepaper}\cite{baliga2017understanding}. In smaller blockchains this isn't as reliable as it is easier for a larger party to make up a majority. 
+Other consensus schemes rely around being able to trust the validators to be honest, two such methods are proof of stake and proof of authority\cite{blockchainBeginners}\cite{baliga2017understanding}: where a party shows that they will take a loss if they are dishonest thus allowing them to participate in the consensus, or a party has authority over the blockchain for example in a permissioned blockchain where validators must sign the blockchain with a private key belonging to the owner to make the block valid. These solutions do mitigate the problems of proof of work but require trust in the authority or the magnitude of the stake being a worthy incentive.
+
+\subsection{Smart Contracts}
+%this is probably going to be really important tbh really need to get to the bottom of how this works
+Smart contracts enable users to execute code on the Blockchain, some Blockchains use smart contracts as major selling point for its services such as Ethereum \cite{wood2014ethereum} and Hyperledger Burrow \cite{HyperLedgerBurrow} where users can execute arbitrary code. When designing a blockchain for E-Voting we can add specific smart contracts for that purpose or you can use pre-existing blockchains such as Ethereum. The ability to execute code on a Blockchain can allow a wide array of E-Voting algorithms to be ran on the Blockchain itself.
+
+\subsection{Technologies used}
+%subsection name work in progress
+Implementation of Solidity and how to interact with is
+\begin{itemize}
+    \item Truffle framework with javascrip, this was an obvious choice for me as it included a lot of the packages and tools I needed together and ready working with decent documentation but need to show also why this was greater than the alternatives
+\end{itemize}
+
+\section{Method}
+here I need to talk about what I actually did and the design choice I made I shouldn't go into reflection too much that should be saved for evaluation
+
+\subsection{Security}
+walk through the design process and the decisions made and the security impacts of them.
+As Matt suggested should talk here also about evaluation of threats and how they're addressed. 
+Stride assessment could work as well as looking at risk as a calculation of likelihood vs consequence this draws in common ideas shown in previous modules and can help draw a clear logical connection in the security assessment
+
+
+
+\section{Results and Testing}
+self explanatory 
+
 
 \section{Evaluation}
+votes may be private but you can prove your votes nature by just sharing the private key this undermines the coercion resistance built into hard et al alg as well as allows a lot of 'dodgy' practices
 
-\subsection{problems with this solution}
-votes may be private but you can prove your votes nature by just sharing the private key this undermines the coersion resistance built into matts alg as well as allows a lot of 'dodgy' practices
 
 
 \section{Conclusions and further work}
 
-\section{Acknowledgements}
-
-\section{Bibliography}
 \printbibliography
 
 \end{document}
+

@@ -1,18 +1,19 @@
-Vote = {
+Results = {
   loading: false,
   contracts: {},
 
   load: async () => {
     console.log("loading app")
-    await Vote.loadWeb3()
-    await Vote.loadAccount()
+    await Results.loadWeb3()
+    await Results.loadAccount()
   },
 
   // https://medium.com/metamask/https-medium-com-metamask-breaking-change-injecting-web3-7722797916a8
   loadWeb3: async () => {
     if (typeof web3 !== 'undefined') {
-      Vote.web3Provider = web3.currentProvider
+      Results.web3Provider = web3.currentProvider
       web3 = new Web3(web3.currentProvider)
+      
     } else {
       window.alert("Please connect to Metamask.")
     }
@@ -30,7 +31,7 @@ Vote = {
     }
     // Legacy dapp browsers...
     else if (window.web3) {
-      Vote.web3Provider = web3.currentProvider
+      Results.web3Provider = web3.currentProvider
       window.web3 = new Web3(web3.currentProvider)
       // Acccounts always exposed
       web3.eth.sendTransaction({/* ... */})
@@ -44,73 +45,66 @@ Vote = {
   //TODO need to make sure this is setup to connect to the correct accounts
   loadAccount: async () => {
     // Set the current blockchain account
-    Vote.account = web3.eth.accounts[0]
+    Results.account = web3.eth.accounts[0]
   },
-
+  
   loadElection: async () => {
-    Vote.setLoading(true)
+    Results.setLoading(true)
     const memLoc = $('#oldMemLoc').val()
     //window.location.reload()
     
     // Create a JavaScript version of the smart contract
     const election = await $.getJSON('Election.json')
-    Vote.contracts.Election = TruffleContract(election)
-    Vote.contracts.Election.setProvider(Vote.web3Provider)
+    Results.contracts.Election = TruffleContract(election)
+    Results.contracts.Election.setProvider(Results.web3Provider)
 
     // Hydrate the smart contract with values from the blockchain
     // e.g 0x9A1684cc48658f098182f154Dfb386080d7B5c6A
-    Vote.election = await Vote.contracts.Election.at(memLoc);
-    console.log(Vote.election.address)
-    Vote.setLoading(false)
-    await Vote.render()
-  },
-  
-  vote: async () => {
-    const token = $('#token').val()
-    console.log(token)
-    const candID = $( ".input:checked" ).val()
-    console.log(candID)
-    await Vote.election.castBallot(candID)
-    //function
+    Results.election = await Results.contracts.Election.at(memLoc);
+    console.log(Results.election.address)
+    Results.setLoading(false)
+    await Results.render()
   },
 
   render: async () => {
     // Prevent double render
-    if (Vote.loading) {
+    if (Results.loading) {
       return
     }
 
     // Update app loading state
-    Vote.setLoading(true)
+    Results.setLoading(true)
 
     // Render Account
-    $('#account').html(Vote.account)
+    $('#account').html(Results.account)
 
     // Render Tasks
-    await Vote.renderCands()
+    await Results.renderResults()
 
     // Update loading state
-    Vote.setLoading(false)
+    Results.setLoading(false)
   },
 
-  renderCands: async () => {
-    const candCount = await Vote.election.candCount()
-    const $candTemplate = $('.candTemplate')
+  renderResults: async () => {
+    const candCount = await Results.election.candCount()
+    const $rowTemplate = $('.rowTemplate')
+    const votes = await Results.election.count()
+    console.log(votes)
+    console.log(votes[1])
     
     for (var i = 0; i < candCount; i++){
-      console.log("ping")
-      const cand = await Vote.election.candidates(i)
-      
-      const $newCandTemplate = $candTemplate.clone()
-      $newCandTemplate.find('.content').html(cand)
-      $newCandTemplate.find('.input').val(i)
-      $('#candList').append($newCandTemplate)
-      $newCandTemplate.show()
+      const cand = await Results.election.candidates(i)
+      const $newRowTemplate = $rowTemplate.clone()
+      console.log($newRowTemplate)
+      $newRowTemplate.find('.candName').html(cand)
+      $newRowTemplate.find('.candVotes').html(votes[i].toNumber())
+      $('#resultsTable').find('tbody').append($newRowTemplate)
+      $newRowTemplate.show()
     }
   },
 
   setLoading: (boolean) => {
-    Vote.loading = boolean
+    Results.loading = boolean
     const loader = $('#loader')
     const content = $('#content')
     if (boolean) {
@@ -125,6 +119,7 @@ Vote = {
 
 $(() => {
   $(window).load(() => {
-    Vote.load()
+    Results.load()
   })
 })
+
