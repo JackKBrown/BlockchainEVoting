@@ -6,11 +6,9 @@ It is still under development and not fully functional though feel free to look 
 
 Installation instructions and requirements
 ==========================================
-This application requires Node.js to work as well as the Truffle framework https://truffleframework.com/, Ganache TestRPC, and a web3 provider like metamask https://metamask.io/.
-
-	sudo apt-get install -y nodejs
+This application requires Node.js and the node package manager to work as well as the Truffle framework https://truffleframework.com/, Ganache TestRPC, and a web3 provider like metamask https://metamask.io/.
   
-After you have Node.js and npm installed, you need to install all the necessary dependencies. Run the following command from the directory containing the _package.json_ file:
+After you have these requirements installed, you need to install all the necessary dependencies through npm. Run the following command from the directory containing the _package.json_ file:
 
 	npm install
 
