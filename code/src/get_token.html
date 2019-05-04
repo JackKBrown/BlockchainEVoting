@@ -50,13 +50,32 @@
           
           <div id="loader" class="text-center">
             <h1 class="text-center"> load election</h1>
-            <form onSubmit="Authenticate.getToken(); return false;">
-              <input id="oldMemLoc" type="text" class="form-control" placeholder="Authority's address" required>
-              <input id="name" type="text" class="form-control" placeholder="name" required>
-              <input id="password" type="text" class="form-control" placeholder="password" required>
+            <script>
+              console.log("");
+            </script>
+            <form action="#"  method="POST">
+              <input name="authAddress" type="text" class="form-control" placeholder="Authority's Address..." required>
+              <input name="name" type="text" class="form-control" placeholder="Name..." required>
+              <input name="password" type="text" class="form-control" placeholder="Password..." required>
+              <input name="clientAddress" type="text" class="form-control" placeholder="Your Address..." required>
+              <input type="submit" value="Submit" class="text-center">
+            </form>
+            <!--
+            <form action="#" method="GET">
+              First name:<br>
+              <input type="text" name="firstname" value="Mickey">
+              <br>
+              Last name:<br>
+              <input type="text" name="lastname" value="Mouse">
+              <br><br>
+              <input type="submit" value="Submit">
+            </form>
+            
+            <form action="#" target="_blank" method="get">
+
               <input type="submit" class="text-center">
             </form>
-          </div>
+            -->
           
           <div id="content">
 
@@ -72,8 +91,7 @@
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="vendor/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="vendor/truffle-contract/dist/truffle-contract.js"></script>
-    
-    <script src="authenticate.js"></script>
+
     
   </body>
 </html>
