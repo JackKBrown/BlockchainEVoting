@@ -4,8 +4,10 @@ var sqlite3 = require('sqlite3').verbose();
 var url = require('url');
 var qs = require('querystring');
 
-function sql(){
+function sql(username, password){
   // open the database
+  console.log(username);
+  console.log(password);
   let db = new sqlite3.Database('./src/Authenticate.db');
  
   let sql = `SELECT * FROM testrun`;
@@ -43,9 +45,6 @@ module.exports = {
       function (req, res, next) {
         var parsed = url.parse(req.url);
         if (parsed.pathname.match(/get_token/)){
-          console.log(req.url);
-          console.log(req.method);
-          sql();
           if(req.method == "POST"){
             var postData = '';
             req.on('data', function(chunk) {
@@ -53,9 +52,8 @@ module.exports = {
               postData += string;
             });
             req.on('end', function() {
-              console.log(postData);  
               var post = qs.parse(postData);
-              console.log(post);
+              sql(post.name, post.password);
               res.write(postData);
               res.end('/n hello world');
             });
