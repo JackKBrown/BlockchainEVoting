@@ -1,7 +1,7 @@
-\documentclass{entcs} 
+\documentclass{entcs}
 \usepackage{CSC8498macro}
 
-\usepackage[backend=biber, style=numeric]{biblatex}
+\usepackage[backend=biber, style = numeric]{biblatex}
 \addbibresource{blockchain.bib}
 
 \begin{document}
@@ -10,7 +10,7 @@
 
 \title{Blockchain E-Voting}
 \author{Jack Brown}
-  \address{School of Computing Science, Newcastle University, UK} 
+\address{School of Computing Science, Newcastle University, UK} 
 
 \begin{abstract} 
 Write your abstract here. This should be a concise summary of what your project has been about and what you aim to show. 9pt text here.
@@ -19,12 +19,10 @@ Write your abstract here. This should be a concise summary of what your project 
 \begin{keyword}
 Blockchain, E-Voting, Smart Contracts, Ethereum, Solidity
 \end{keyword}
+
 \end{frontmatter}
 
-%\tableofcontents
-
 \section{Introduction}
-
 E-Voting for important votes is a contentious issue due to the amount of trust required for any system facilitating these important votes. The risk of potentially inviting the consequences of unforeseen errors many view to far out way the conveniences brought about by E-Voting \cite{lauer2004risk}. We shall explore then in this paper how this implementation using smart contracts on the Blockchain helps alleviate the potential downfalls of E-Voting.
 %and the untrusted[use different word] nature of these technologies. Blockchain has emerged as another potential solution to this problem though, in this report we shall discuss the application of Blockchain to e-voting, their advantages and disadvantages, the differences between certain solutions, and conclude on the usefulness of this idea.
 
@@ -32,10 +30,12 @@ Voting is used worldwide to decide a range of issues, different schemes of votin
 
 Blockchain was originally described in the Bitcoin white paper by Satoshi Nakamoto \cite{BTCWhitepaper}. In this paper a system for tracking ownership of a digital currency, bitcoin, was invented. The system used for this is what is commonly known today as the Blockchain.
 
+The principle protocol that we will base our design of is that by Hardwick et. al. \cite{hardwick2018}
+
+
 In this paper we will cover our initial aims and objectives in section two. Section three we will discuss the background material. In section four we will cover the approach taken on this
 
 \section{Aims and Objectives}
-%this could go in intro, did this last year but the original layout didn't
 \begin{center}
     {\bf Aim}: To investigate and implement a Blockchain E-Voting algorithm that implements Verifiability, availability, transparency, and flexibility. 
 \end{center}
@@ -45,7 +45,6 @@ In this paper we will cover our initial aims and objectives in section two. Sect
     \item Extend the application to include the desirable properties
     \item Evaluate and compare to other solutions.
 \end{itemize}
-
 
 \section{Background Material}
 In this section we discuss the material studied and the nature of technologies and ideas used for this dissertation.
@@ -92,35 +91,70 @@ Other consensus schemes rely around being able to trust the validators to be hon
 %this is probably going to be really important tbh really need to get to the bottom of how this works
 Smart contracts enable users to execute code on the Blockchain, some Blockchains use smart contracts as major selling point for its services such as Ethereum \cite{wood2014ethereum} and Hyperledger Burrow \cite{HyperLedgerBurrow} where users can execute arbitrary code. When designing a blockchain for E-Voting we can add specific smart contracts for that purpose or you can use pre-existing blockchains such as Ethereum. The ability to execute code on a Blockchain can allow a wide array of E-Voting algorithms to be ran on the Blockchain itself.
 
+\subsection{Blind Signatures}
+Blind signatures in cryptography as described by Chaum \cite{chaum1983blind}, are methods of providing a cryptographic signature to a client without learning the content the authority has signed. This can be used to help protect the privacy of an individual. This can be achieved with RSA keys with the following algorithm \cite{MITcrypto}.
+\(m, s, H(), r, e, d, N\) These characters represent the message, signed message, a secure hash function, random coprime of N, public RSA exponent, private RSA exponent, and RSA modulus N.
+\begin{itemize}
+    \item client sends blinded message using random blinding factor and public key: \\
+    \(m_b = H(m).r^e (mod N)\)
+    \item authority signs the blinded message using private key: \\
+    \(s_b = m^d_b = H(m)^d.r^ed = H(m)^d.r (mod N)\)
+    \item client unblinds the signed message using the modular inverse of \(r, r^{-1}\): \\
+    \(s = s^e_b.r^{-1} = H(m)^d.r.r^{-1} = H(m)^d (mod N)\)
+\end{itemize}
+
 \subsection{Technologies used}
 %subsection name work in progress
-Implementation of Solidity and how to interact with is
+Technologies have been split into two sections reflecting the two parts of this project but in reality there is a fair amount of crossover involved in deciding which to use.
+%https://github.com/ethereum/ethereumj
+\textbf{Smart Contract}
 \begin{itemize}
-    \item Truffle framework with javascrip, this was an obvious choice for me as it included a lot of the packages and tools I needed together and ready working with decent documentation but need to show also why this was greater than the alternatives
+    \item Solidity and Ethereum, Solidity is a language designed specifically for use on the Ethereum Blockchain or 
+    \item Truffle framework, an implementation of a Solidity compiler for ethereum. this was an obvious choice for me as it included a lot of the packages and tools I needed together and ready working with decent documentation but need to show also why this was greater than the alternatives
+    \item Java and Ethereum, the ethereumj project is an implementation of the Ethereum yellow paper of java. 
+\end{itemize}
+
+\textbf{Web Application}
+\begin{itemize}
+    \item Javascript on client side, javascript is the most universal language for client side scripting which makes it an obvious choice for use. javascript also has built in Asynchronous calls ideal for Blockchain calls using libraries such as web3 or the truffle frameworks own javascript libraries. 
+    \item Java, built in web support such as maven allows for its use for serving a web application the difficulty of this is that this would also require considerable amounts of a client side scripting language such as JavaScript too to implement parts of the protocol with more sensitive content. 
+    \item PHP, commonly used for server side scripting in web development. Though originally designed for web development, due to a lack of asynchronous support it makes development of Blockchain applications using PHP difficult.
+    \item Python, python is an object oriented language with wide applications due to its selection of available libraries.
+    \item Node.js for server side javascript, providing a way of running the backend of the server using javascript. Key benefits of using Node is how easy it is to make application built using it portable, with the node package manager, npm, you can easily install many libraries and track which ones are necessary for your application. The wide selection of libraries include those specifically made for Blockchain applications such as Web3 and Truffle.
 \end{itemize}
 
 \section{Method}
 here I need to talk about what I actually did and the design choice I made I shouldn't go into reflection too much that should be saved for evaluation
+
+This implementation involved 2 key parts the deployment of a smart contract and a simple web application to interact with the smart contract, in this current implementation it is also necessary to use the web application in order to get the blind signed token though in a real world application other methods of distributing signed tokens would be applicable with the same implementation.
+As said before we are using protocols described by Hardwick et. al. in our implementation, to summarise our version of their protocol briefly we have split the :
+\begin{enumerate}
+    \item \textbf{Initialisation Phase}, during this phase a new contract is generated with an initial block. In this phase the contract creator (the authority) adds the list of candidates as well as key information for running the contract. Importantly this includes the public key of the authorities RSA key pair. which allows verification of signed tokens.
+    \item \textbf{Preparation Phase}, at this point voters can begin to authenticate 
+    \item \textbf{Voting Phase}, Everyone with a valid key pair can vote at this point. To do this they construct a ballot and broadcast it to the Blockchain. Encrypting their vote using their private key to ensure fairness as the voting algorithm dictates. Including the Vote ID (VID) and CA's signiture on their public key. If recasting is allowed then this is also done in this phase.
+    \item \textbf{Counting Phase}, during the final phase after voting has ceased all voters must broadcast their 'ballot opening message' which contains the key to decrypt their vote and the VID of that vote.
+\end{enumerate}
+
+%when talking about signing hardwick et al say they use the blockchain public key I didnt do that due to the signing issue of sending an arbitrary message to be signed by the CA that they cannot detect due to it being blinded this is circumvented by using RSA
 
 \subsection{Security}
 walk through the design process and the decisions made and the security impacts of them.
 As Matt suggested should talk here also about evaluation of threats and how they're addressed. 
 Stride assessment could work as well as looking at risk as a calculation of likelihood vs consequence this draws in common ideas shown in previous modules and can help draw a clear logical connection in the security assessment
 
-
-
 \section{Results and Testing}
 self explanatory 
 
 
 \section{Evaluation}
-votes may be private but you can prove your votes nature by just sharing the private key this undermines the coercion resistance built into hard et al alg as well as allows a lot of 'dodgy' practices
+This system allows voters to register and vote on the same day, in some elections such as a general election voters must register weeks in advance or lose the opportunity to vote.
 
+votes may be private but you can prove your votes nature by just sharing the private key this undermines the coercion resistance built into hardwick et al alg as well as allows a lot of 'dodgy' practices
+
+with a blind signiture you can't prove that you're not lying about losing a token. therefor if you lose a token you just can't vote in this system.
 
 
 \section{Conclusions and further work}
-
 \printbibliography
 
 \end{document}
-
