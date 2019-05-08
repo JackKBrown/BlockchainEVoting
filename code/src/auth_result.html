@@ -43,7 +43,13 @@
     <div class="container-fluid">
       <div class="row">
         <main role="main" class="col-lg-12 d-flex justify-content-center">
-          <div id="insertion"></div>
+          <div id="load" class="text-center">
+            <h1 class="text-center"> load election</h1>
+            <div id="insertion"></div>
+              <input id="address" type="text" class="form-control" placeholder="Your Address..." required>
+              <input id="r_inverse" type="text" class="form-control" placeholder="inverse r..." required>
+              <button class="text-center" onclick="verify()" type="button">verify</button>
+          </div>
         </main>
       </div>
     </div>
@@ -56,6 +62,8 @@
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="vendor/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="vendor/truffle-contract/dist/truffle-contract.js"></script>
+    <script src="sjcl/sjcl.js"></script>
+    <script src="authenticate.js"></script>
     
   </body>
 </html>

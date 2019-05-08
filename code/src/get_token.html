@@ -55,8 +55,12 @@
               <!--<input name="authAddress" type="text" class="form-control" placeholder="Authority's Address..." required>-->
               <input name="name" type="text" class="form-control" placeholder="Name..." required>
               <input name="password" type="text" class="form-control" placeholder="Password..." required>
-              <input name="clientAddress" type="text" class="form-control" placeholder="Your Address..." required>
-              <input type="submit" value="Submit" class="text-center">
+              <input id="address" type="text" class="form-control" placeholder="Your Address..." required>
+              <button class="text-center" onclick="generate()" type="button">generate</button>
+              <input id="H_m" type="text" class="form-control" readonly>
+              <input id="r" type="text" class="form-control" readonly>
+              <input id="m-" name="mDash" type="text" class="form-control" readonly>
+              <input id="submit" type="submit" value="Submit" class="text-center" style="display: none">
             </form>          
         </main>
       </div>
@@ -68,6 +72,8 @@
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="vendor/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="vendor/truffle-contract/dist/truffle-contract.js"></script>
+    <script src="sjcl/sjcl.js"></script>
+    <script src="authenticate.js"></script>
 
     
   </body>
