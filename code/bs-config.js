@@ -26,8 +26,12 @@ function sql_public(res){
           console.error(err.message); 
         }
         html = html.toString();
-        var x = html.indexOf('<div id="insertion">');
-        var new_html = html.slice(0,x+20)+'<p class="text-center">Public Key:</p><input id="public_key" type="text" class="form-control" value="'+row.pub_key+'" readonly><p class="text-center">Modulus:</p><input id="big_N" type="text" class="form-control" value="'+row.big_N+'" readonly>'+html.slice(x+20,html.length);
+        var x = html.indexOf('<div id="insertion" style="display: none">');
+        var insert = '<p class="text-center">Public Key:</p>';
+        insert = insert + '<input id="public_key" type="text" class="form-control" value="'+row.pub_key+'" style="display: none" readonly>';
+        insert = insert + '<p class="text-center" style="display: none">Modulus:</p>';
+        insert = insert + '<input id="big_N" type="text" class="form-control" value="'+row.big_N+'" style="display: none" readonly>';
+        var new_html = splice(html, insert, x+42);
         res.end(new_html);
       });
     }
@@ -72,7 +76,8 @@ function sql_auth(post, res){
             var private = BigInt(row2.priv_key);
             var signed_blinded_m = bigint_mod_pow(m_dash, private, big_N);
             console.log(signed_blinded_m);
-            var x = html.indexOf('<div id="insertion">');
+            
+            var x = html.indexOf('<div id="insertion" style="display: none">');
             
             //tidy up a bit
             var insert = '<p class="text-center">Public Key:</p>';
@@ -81,7 +86,7 @@ function sql_auth(post, res){
             insert = insert + '<input id="big_N" type="text" class="form-control" value="'+row2.big_N+'" readonly>';
             insert = insert + '<p class="text-center">signed and blinded message:</p>';
             insert = insert + '<input id="signed_blinded_m" type="text" class="form-control" value="'+signed_blinded_m+'" readonly>';
-            var new_html = splice(html, insert, x);
+            var new_html = splice(html, insert, x+42);
             console.log(row);
             res.end(new_html);
           }

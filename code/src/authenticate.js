@@ -6,14 +6,8 @@ function generate(){
   //validate address
   
   //get storage fields
-  const $hash_m = $('#H_m');
-  const $blinding_factor = $('#r');
-  const $blinded_hash_m = $('#m-');
-  
-  //create message hash
-  var bitArray = sjcl.hash.sha256.hash(client_address);  
-  var digest_sha256 = sjcl.codec.hex.fromBits(bitArray);
-  $hash_m.val(digest_sha256);
+  const $inverse_blinding_factor = $('#r_inverse');
+  const $m_dash = $('#m-');
   
   //get random number
   var r = NaN;
@@ -22,18 +16,14 @@ function generate(){
     r = BigInt(rand_rel_prime(0,Number.MAX_SAFE_INTEGER, big_N));
     r_inverse = bigint_mod_inverse(r,big_N);
   }
-  console.log("r and r inverse");
-  console.log(r);
-  console.log(r_inverse);
-  $blinding_factor.val(r);
+  $inverse_blinding_factor.val("0x"+r_inverse.toString(16));
   
   //blind message
-  const hash_decimal = BigInt("0x"+digest_sha256);
-  const m_dash = BigInt((hash_decimal*(r**public_key))%big_N);
-  $blinded_hash_m.val(m_dash);
+  const message = BigInt(client_address);
+  const m_dash = BigInt((message*(r**public_key))%big_N);
+  $m_dash.val("0x"+m_dash.toString(16))
 
   $('#submit').show();
-
 }
 
 function verify(){
@@ -41,27 +31,24 @@ function verify(){
   const big_N = BigInt($('#big_N').val());
   const signed_blinded_m = BigInt($('#signed_blinded_m').val());
   const r_inverse = BigInt($('#r_inverse').val());
-  const client_address = $('#address').val();
+  const client_address = $('#address').val().toLowerCase();
+  
+  const $token = $('#s-');
   
   //unblind
   const signed_m = BigInt((signed_blinded_m*r_inverse)%big_N);
-  console.log("signed_m");
-  console.log(signed_m);
+  $token.val("0x"+signed_m.toString(16));
   
-  //get hashed message
-  var bitArray = sjcl.hash.sha256.hash(client_address);  
-  var digest_sha256 = sjcl.codec.hex.fromBits(bitArray);
-  const hash_decimal = BigInt("0x"+digest_sha256);
-  
-  //const extracted_m = BigInt((signed_m**public_key)%big_N);
+  //verify it matches
   const extracted_m = bigint_mod_pow(signed_m, public_key, big_N);
   console.log("extracted_m");
-  console.log(extracted_m);
+  console.log("0X"+extracted_m.toString(16));
   console.log("original_m");
-  console.log(hash_decimal);
+  console.log(client_address);
 }
 
-//bigint has a size limit of 1m bits ((2^2048)^2048)~4m
+//bigint has a size limit of 1m bits ((2^2048)^2048)~4m so need modpow
+//modpow should also be faster than pow then mod
 function bigint_mod_pow(base, exp, mod){
   if (mod == 1n) return 0;
   base = base%mod;
@@ -94,7 +81,6 @@ function bigint_gcd(x,y){
     var t = y;
     y = x % y;
     x = t;
-    //console.log(x);
   }
   return x;
 }
@@ -108,7 +94,7 @@ function bigint_mod_inverse(a, m) {
     s.push({a, b})
   }
   if (a != 1) {
-    return NaN // inverse does not exists
+    return NaN // inverse does not exist
   }
   // find the inverse
   let x = 1n

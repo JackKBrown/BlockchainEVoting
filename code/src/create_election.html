@@ -49,12 +49,15 @@
         <main role="main" class="col-lg-12 d-flex justify-content-center">
           
           <div id="loader" class="text-center">
-            <p class="text-center"> create new election</p>
+            <h2 class="text-center"> Create election</h2>
             <form onSubmit="CE.createElection(); return false;">
-              <input id="name" type="text" class="form-control" placeholder="Name of Election" required>
+              <p class="text-center"> start time</p>
+              <input id="date_start" type="datetime-local" class="form-control">
+              <p class="text-center"> end time</p>
+              <input id="date_end" type="datetime-local" class="form-control">
               <input type="submit" hidden="">
             </form>
-            <p class="text-center"> load previous election</p>
+            <h2 class="text-center"> Load election</h2>
             <form onSubmit="CE.loadElection(); return false;">
               <input id="oldMemLoc" type="text" class="form-control" placeholder="Memory Location" required>
               <input type="submit" hidden="">
@@ -62,16 +65,18 @@
           </div>
           
           <div id="content">
-            <h1 class="text-center" id="elecName">Elec name goes here...</h1>
-            <ul id="candList" class="list-unstyled">
+            <h2 class="text-center">Candidates:</h2>
+            <ul id="candList" class="list-group">
             <div class="candTemplate" style="display: none">
-                <span class="content">Cand name goes here...</span>
+                <li class="list-group-item" id="item">Cand name goes here...</li>
             </div>
             </ul>
             <form onSubmit="CE.addCandidate(); return false;">
               <input id="newCand" type="text" class="form-control" placeholder="Add new Candidate..." required>
               <input type="submit" hidden="">
             </form>
+            <p class="text-center">Your election address:</p>
+            <input id="elecMem" type="text" class="form-control"readonly>
           </div>
           
         </main>
@@ -84,6 +89,7 @@
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="vendor/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="vendor/truffle-contract/dist/truffle-contract.js"></script>
+    <script src="setup_web.js"></script>
     <script src="create_election.js"></script>
     
   </body>

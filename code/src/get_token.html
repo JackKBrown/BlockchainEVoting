@@ -50,18 +50,17 @@
           
           <div id="load" class="text-center">
             <h1 class="text-center"> load election</h1>
-            <div id="insertion"></div>
+            <div id="insertion" style="display: none"></div>
             <form action="#"  method="POST">
               <!--<input name="authAddress" type="text" class="form-control" placeholder="Authority's Address..." required>-->
               <input name="name" type="text" class="form-control" placeholder="Name..." required>
               <input name="password" type="text" class="form-control" placeholder="Password..." required>
-              <input id="address" type="text" class="form-control" placeholder="Your Address..." required>
-              <button class="text-center" onclick="generate()" type="button">generate</button>
-              <input id="H_m" type="text" class="form-control" readonly>
-              <input id="r" type="text" class="form-control" readonly>
-              <input id="m-" name="mDash" type="text" class="form-control" readonly>
+              <input id="m-" name="mDash" type="text" class="form-control" style="display: none" readonly>
               <input id="submit" type="submit" value="Submit" class="text-center" style="display: none">
-            </form>          
+            </form> 
+            <input id="address" type="text" class="form-control" placeholder="Your Address..." required>
+            <input id="r_inverse" type="text" class="form-control" placeholder="unblinding factor..." readonly> 
+            <button class="text-center" onclick="generate()" type="button">generate</button>        
         </main>
       </div>
     </div>
