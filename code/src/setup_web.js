@@ -49,6 +49,9 @@ Setup = {
   createElection: async () => {
     const date_start = (new Date($('#date_start').val())).getTime()
     const date_end = (new Date($('#date_end').val())).getTime()
+    const start_timestamp = Math.floor(date_start/1000)
+    const end_timestamp = Math.floor(date_end/1000)
+    
     // validation on these datetimes
     
     // Create a JavaScript version of the smart contract
@@ -58,7 +61,7 @@ Setup = {
 
     // Hydrate the smart contract with values from the blockchain
     // e.g 0x9A1684cc48658f098182f154Dfb386080d7B5c6A
-    Setup.election = await Setup.contracts.Election.new(date_start, date_end);
+    Setup.election = await Setup.contracts.Election.new(start_timestamp, end_timestamp);
     console.log(Setup.election.address)
   },
 

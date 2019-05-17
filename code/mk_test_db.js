@@ -1,8 +1,3 @@
-const test_data = "INSERT INTO client VALUES ('john', 'pass', 0), ('eve', 'pass', 0)";
-
-//    CONSTRAINT CA_public_key FOREIGN KEY (public_key)
-//    REFERENCES CA(public_key)
-
 const sqlite3 = require('sqlite3').verbose();
 
 // open the database
@@ -13,17 +8,23 @@ let db = new sqlite3.Database('./src/Authenticate.db', sqlite3.OPEN_READWRITE, (
     console.log('Connected to database.');
   }
 }); 
-
-let sql = "SELECT * FROM authority";
-
-db.get(sql, [], (err, row) => {
+ 
+let sql = `SELECT *
+           FROM client
+           WHERE name  = ?
+           AND password = ?`;
+let name = 'katie';
+let password = "pass"
+// first row only
+db.get(sql, [name,password], (err, row) => {
   if (err) {
-    //log error
-    console.error(err.message);
+    return console.error(err.message);
   }
-  console.log(row);
+  return row
+    ? console.log(row.name)
+    : console.log(`No playlist found with the id ${password}`);
+ 
 });
  
 // close the database connection
 db.close();
-
