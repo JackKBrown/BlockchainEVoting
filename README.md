@@ -24,6 +24,11 @@ Just run the following command from the console in order to start the applicatio
 
 	node run dev
 
+Troubleshooting
+=========================
+if there are issues with the database the mk_test_db.sql program will reset the database
+
+
 References
 =========================
 [1] Hardwick, Freya Sheer and Akram, Raja Naeem and Markantonakis, Konstantinos. "E-Voting with Blockchain: An E-Voting Protocol with Decentralisation and Voter Privacy" arXiv preprint arXiv:1805.10258, 2018.

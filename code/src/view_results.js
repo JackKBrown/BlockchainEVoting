@@ -1,13 +1,21 @@
+/* A collection of functions written using truffle and JQuery to add the 
+ * smart contract functionality for the view_results.html page requires 
+ * setup_web.js to function
+ */
 Results = {
   loading: false,
   
+  /* load an election using setup_web.js then render the smart contract content
+   */
   loadElection: async () => {
     Results.setLoading(true)
     await Setup.loadElection()
     Results.setLoading(false)
     await Results.render()
   },
-
+  
+  /* prepares the page to load content
+   */
   render: async () => {
     // Prevent double render
     if (Results.loading) {
@@ -26,7 +34,9 @@ Results = {
     // Update loading state
     Results.setLoading(false)
   },
-
+  
+  /* call the count function then display the candidate votes next to candidate
+   */
   renderResults: async () => {
     const candCount = await Setup.election.candCount()
     const $rowTemplate = $('.rowTemplate')
@@ -44,7 +54,9 @@ Results = {
       $newRowTemplate.show()
     }
   },
-
+  
+  /* controls the hidden HTML
+   */
   setLoading: (boolean) => {
     Results.loading = boolean
     const loader = $('#loader')

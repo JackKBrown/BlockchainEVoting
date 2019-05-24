@@ -1,6 +1,12 @@
+/* A collection of functions written using truffle and JQuery to add the 
+ * smart contract functionality for the vote.html page requires 
+ * setup_web.js to function
+ */
 Vote = {
   loading: false,
   
+  /* load an election using setup_web.js then render the smart contract content
+   */
   loadElection: async() => {
     Vote.setLoading(true)
     await Setup.loadElection();
@@ -8,6 +14,9 @@ Vote = {
     await Vote.render()
   },
   
+  /* retrieves the ballot information from HTML using JQuery then constructs
+   * a new ballot from that data.
+   */
   vote: async () => {
     const token = $('#token').val()
     console.log(token)
@@ -16,6 +25,8 @@ Vote = {
     await Setup.election.castBallot(candID, token)
   },
 
+  /* prepares the page to load content
+   */
   render: async () => {
     // Prevent double render
     if (Vote.loading) {
@@ -31,6 +42,8 @@ Vote = {
     Vote.setLoading(false)
   },
 
+  /* create the list of candidates to vote for
+   */
   renderCands: async () => {
     const candCount = await Setup.election.candCount()
     const $candTemplate = $('.candTemplate')
@@ -47,6 +60,8 @@ Vote = {
     }
   },
 
+  /* controls the hidden HTML
+   */
   setLoading: (boolean) => {
     Vote.loading = boolean
     const loader = $('#loader')

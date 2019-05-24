@@ -1,3 +1,6 @@
+/* A collection of functions written using truffle and JQuery to add the 
+ * smart contract functionality
+ */
 Setup = {
   contracts: {},
 
@@ -6,7 +9,9 @@ Setup = {
     await Setup.loadWeb3()
     await Setup.loadAccount()
   },
-
+  
+  /* load web3 content
+   */
   // https://medium.com/metamask/https-medium-com-metamask-breaking-change-injecting-web3-7722797916a8
   loadWeb3: async () => {
     if (typeof web3 !== 'undefined') {
@@ -40,13 +45,16 @@ Setup = {
     }
   },
   
-  //TODO need to make sure this is setup to connect to the correct accounts
+  //display the current connected eth address
   loadAccount: async () => {
     // Set the current blockchain account
     Setup.account = web3.eth.accounts[0]
   },
 
+  /* create a new election on the blockchain
+   */
   createElection: async () => {
+    //fetch the parameters
     const date_start = (new Date($('#date_start').val())).getTime()
     const date_end = (new Date($('#date_end').val())).getTime()
     const start_timestamp = Math.floor(date_start/1000)
@@ -64,7 +72,9 @@ Setup = {
     Setup.election = await Setup.contracts.Election.new(start_timestamp, end_timestamp);
     console.log(Setup.election.address)
   },
-
+  
+  /* load an existing election using a transaction address
+   */
   loadElection: async () => {
     const memLoc = $('#oldMemLoc').val()
     //window.location.reload()
@@ -81,6 +91,7 @@ Setup = {
   }
 }
 
+//automatically load object when the window has finished loading.
 $(() => {
   $(window).load(() => {
     Setup.load()

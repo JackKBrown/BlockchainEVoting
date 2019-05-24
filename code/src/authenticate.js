@@ -1,3 +1,5 @@
+/* generates the blinded message and unblinding factor 
+ */
 function generate(){
   //get data
   const public_key = BigInt($('#public_key').val());
@@ -26,6 +28,8 @@ function generate(){
   $('#submit').show();
 }
 
+/* unblinds the signed blinded message with the unblinding factor 
+ */
 function verify(){
   const public_key = BigInt($('#public_key').val());
   const big_N = BigInt($('#big_N').val());
@@ -48,7 +52,7 @@ function verify(){
 }
 
 //bigint has a size limit of 1m bits ((2^2048)^2048)~4m so need modpow
-//modpow should also be faster than pow then mod
+//modpow should also be faster than pow then mod as it uses fast exponentiation
 function bigint_mod_pow(base, exp, mod){
   if (mod == 1n) return 0;
   base = base%mod;
