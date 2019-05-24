@@ -5,8 +5,6 @@ import "./BigNumber.sol";
 pragma solidity ^0.5.0;
 
 contract Election {
-  
-  event Deposit(uint value);
     
   using BigNumber for *;
   uint public candCount = 0;
@@ -27,11 +25,16 @@ contract Election {
     bytes token;
   }
   
-  //mapping will eventually be signed token to Ballot
+  
   mapping(address => Ballot) public votes;
   address[] public voters;
   string[] public candidates;
-
+  
+  /** @dev Create a new Election instance.
+      *
+      * parameter: uint _start - starting time seconds since epoch
+      * parameter: uint _end - ending time seconds since epoch
+      */
   constructor(uint _start, uint _end) public {
     startTime = _start;
     endTime = _end;
@@ -40,7 +43,10 @@ contract Election {
     addCandidate("Spoil Ballot");
   }
   
-  //function allows the authority to add candidates to be voted on
+  /** @dev adds a candidate to the candidate array.
+      *
+      * parameter: string _cand - candidates name
+      */
   function addCandidate(string memory _cand) public {
     require(
       (msg.sender == authority)&&
@@ -50,9 +56,12 @@ contract Election {
     candCount ++;
   }
 
+  /** @dev adds a ballot to the ballot mapping.
+      *
+      * parameter: uint _cand - candidates number
+      * parameter: bytes token - rsa signed token
+      */
   function castBallot(uint _cand, bytes memory token) public {
-    //later need to change it so the token required in not in mapping
-    //also need to require that the signed token is legitimate
     require(
       (!votes[msg.sender].cast)&&
       (_cand<candidates.length)&&
@@ -62,9 +71,12 @@ contract Election {
     );
     votes[msg.sender] = Ballot(msg.sender, _cand, true, token);
     voters.push(msg.sender);
-    //potentially emit a voted event?
   }
   
+  /** @dev counts the total votes for each candidate
+      *
+      * returns: array of total votes where the index is the candidate number
+      */
   function count() public view returns (uint[] memory){
     uint[] memory tally = new uint[](candidates.length);
     for (uint j=0; j<voters.length; j++) {
@@ -73,7 +85,12 @@ contract Election {
     return tally;
   }
   
-  //"0x01e6edea40a06cbeb98b648ccfeda2b261140c53", "0x01e6edea40a06cbeb98b648ccfeda2b261140c53"
+  /** @dev verify the content of a rsa token
+      *
+      * parameter: address sender - message sender
+      * parameter: bytes token - rsa signed token
+      * returns: boolean as to whether the token verifies or not
+      */
   function verify_token(address sender, bytes memory token) public returns(bool){
     uint256 expected = uint256(sender);
     BigNumber.instance memory base = BigNumber.instance(token, false, 2048);
@@ -85,7 +102,11 @@ contract Election {
   }
   
   
-  //due to the way BigNumber works need to make this function to truncate the top end bytes off.
+    /** @dev truncates bytes to only the last 32 nybbles so it can be converted to bytes32
+      *
+      * parameter: bytes token - rsa signed token
+      * returns: bytes32 the last 32 bytes of the input
+      */
   function bytesToBytes32(bytes memory source)internal returns (bytes32 result) {
     uint256 length = source.length;
     if (source.length == 0) {

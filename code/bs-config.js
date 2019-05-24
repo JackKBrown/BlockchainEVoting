@@ -10,8 +10,6 @@ function sql_public(res){
   let db = new sqlite3.Database('./src/Authenticate.db');
  
   let sql = "SELECT * FROM authority";
-  
-  console.log(sql);
  
   db.get(sql, [], (err, row) => {
     if (err) {
@@ -44,19 +42,26 @@ function sql_public(res){
 function sql_auth(post, res){
   // open the database
   let db = new sqlite3.Database('./src/Authenticate.db');
- 
-  let sql = "SELECT * FROM client WHERE name = '"+post.name+"' AND password = '"+post.password+"'";
   
-  console.log(sql);
+  let sql = "SELECT * FROM client WHERE name = ? AND password = ?";
  
-  db.get(sql, [], (err, row) => {
+  db.get(sql, [post.name, post.password], (err, row) => {
     if (err) {
       //log error
       console.error(err.message);
     }
     if (row == undefined) {
       res.end("not found");
+    }else if(row.got_token == 1){
+      res.end("already voted");
     }else{
+      let insert_sql = "UPDATE client SET got_token=1 WHERE name='"+row.name+"'";
+      db.run(insert_sql, [], function(err) {
+        if (err) {
+          return console.error(err.message);
+        }
+        console.log(`Row(s) updated: ${this.changes}`);
+      });
       fs.readFile('./src/auth_result.html', function (err, html) {
         if (err) {
           console.error(err.message); 
@@ -75,7 +80,6 @@ function sql_auth(post, res){
             var big_N = BigInt(row2.big_N);
             var private = BigInt(row2.priv_key);
             var signed_blinded_m = bigint_mod_pow(m_dash, private, big_N);
-            console.log(signed_blinded_m);
             
             var x = html.indexOf('<div id="insertion" style="display: none">');
             
@@ -87,7 +91,6 @@ function sql_auth(post, res){
             insert = insert + '<p class="text-center">signed and blinded message:</p>';
             insert = insert + '<input id="signed_blinded_m" type="text" class="form-control" value="'+signed_blinded_m+'" readonly>';
             var new_html = splice(html, insert, x+42);
-            console.log(row);
             res.end(new_html);
           }
         });
@@ -145,7 +148,6 @@ module.exports = {
             });
             req.on('end', function() {
               var post = qs.parse(postData);
-              console.log(post);
               sql_auth(post, res);
             });
           } else {
