@@ -32,7 +32,7 @@ Blockchain, E-Voting, Smart Contracts, Ethereum, Solidity
 E-Voting for significant votes is a contentious issue due to the amount of trust required for any system facilitating these important votes. However the benefits of E-Voting can be numerous; potentially increasing the interest to vote by younger generations and allowing individuals that might be unable to vote due to time constraints to participate. In the UK individuals can vote by visiting the polling station they are registered at between 7am and 10pm \cite{pollStations}, traditionally these votes also take place on Thursdays, a working day. This can require an individual to put significant effort into reaching a poll station and due to work, it could be infeasible to do so. E-Voting could be done over the internet, using any device an individual has increasing convenience and availability. A vote also does not need to be exclusively electronic meaning an adequate protocol can only serve to increase the electorate's say in an election. Beyond this is the benefits of speed and price to vote, E-Voting can be digitally counted for increased speed and accuracy without having to pay counters or administrators for polling stations. But still, the risk of unforeseen errors or security flaws many view to far out weigh these conveniences brought about by E-Voting \cite{lauer2004risk}. We shall explore then in this project how this implementation using smart contracts on the blockchain can help alleviate the potential downfalls of E-Voting.
 %and the untrusted[use different word] nature of these technologies. blockchain has emerged as another potential solution to this problem though, in this report we shall discuss the application of blockchain to e-voting, their advantages and disadvantages, the differences between certain solutions, and conclude on the usefulness of this idea.
 
-Voting is used worldwide to decide a range of issues, different schemes of voting exist but the underlying principle is the same. A group of parties wish to decide on an issue and whichever solution gets the most support should win. For this reason voting needs to be fair and obey the rules of the vote. You need to be able to give certain guarantees of this and in E-Voting this means a system must guarantee certain properties of a vote. We shall discuss these properties in section \ref{sec:voting}.
+Voting is used worldwide to decide a range of issues, different schemes of voting exist but the underlying principle is the same. A group of parties wish to decide on an issue and whichever solution gets the most support should win. For this reason voting needs to be fair and obey the rules of the vote. You need to be able to give certain guarantees of this and in E-Voting this means a system must guarantee certain properties of a vote. We shall discuss these properties in section \ref{sec: voting}.
 
 Blockchain was originally described in the Bitcoin white paper by Satoshi Nakamoto \cite{BTCWhitepaper}. In this paper a system for tracking ownership of digital currency, Bitcoin, was invented. This system is what is commonly known today as the blockchain. The uses of a blockchain extend beyond currency though due to the increased levels of integrity it allows and the ability to be used as a vessel for mutual trust between distrusting parties due to total transparency. For these reasons this technology has seen a use for supply chain management, international trade, and for E-Voting amongst other things \cite{wust2018need}. The reason E-Voting is an interesting application for blockchain technology is that a blockchain can be secure and completely public allowing voters to verify the election is being held honestly. This can be a great tool to improve a groups trust in a system that they may not fully believe in and to assure that a vote is correct. This public verifiability is desirable, which is why blockchain is being used instead of a centralised database. But this comes at the cost of a loss of privacy or eligibility. In order to demonstrate that an individual can vote or has not already voted they need to prove their identity through some means. Our problem is then to provide both privacy and eligibility whilst maintaining the benefits of the blockchain.
 
@@ -52,21 +52,21 @@ In this project, we will endeavor to explore how blockchain can be used for E-Vo
 \subsection{Aims and Objectives}
 %could probably write something more here?
 \begin{center}
-    {\bf Aim}: To investigate and implement a blockchain E-Voting algorithm that implements methods to ensure Privacy, Verifiability, availability, transparency, and flexibility. 
+    {\bf Aim}: To investigate and implement a blockchain E-Voting algorithm that implements methods to ensure Privacy, Verifiability, Availability, and Robustness. 
 \end{center}
 {\bf Objectives}
-\begin{itemize}
+\begin{enumerate}
     \item Identify desirable properties of voting and metrics for evaluation.
     \item Design and Implement a basic application for voting
     \item Extend the application to include the desirable properties
     \item Evaluate and compare to other solutions.
-\end{itemize}
+\end{enumerate}
 
 
 \section{Background Material}
 In this section we discuss the material studied and the nature of technologies and ideas used for this project.
 
-\subsection{Voting and E-Voting} \label{sec:voting}
+\subsection{Voting and E-Voting} \label{sec: voting}
 Solutions to voting problems that are brought forth by different E-Voting protocols are can be specific to that problem and can cause other difficulties, beyond this some properties are incompatible as discussed by Chevallier et. al. \cite{Chevallier-mames06onsome}. Other properties can even be undesirable in different voting scenarios, for example it is necessary to ensure that voter privacy doesn't exist in the UK House of Commons so members of Parliament are accountable to their constituency for how they vote. This makes it difficult to evaluate an objective measure of what is good or bad with a protocol. This is why we must identify and define the properties that we desire in our protocol, that an election may have.
 
 %http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.165.852
@@ -215,7 +215,6 @@ Although the server initialises each section in the diagram, the client would ty
 \end{figure}
 
 \subsection{Security design and recommendations} \label{sec: security design}
-%this could be split into parts 
 In this section we briefly consider some potential security flaws that could undermine the project and discuss efforts made or what could be done to mitigate them with a risk analysis. We will use the STRIDE model \cite{STRIDE} for defining attacks on the system and a risk model comparing likelihood and impact on a scale of one to five.
 
 \subsubsection{Voter privacy}
@@ -264,8 +263,6 @@ One intention of this project was to demonstrate that privacy can be assured on 
 
 \subsection{Creating an Election}
 %find out if you can include an appendix
-
-%NOTE remember if I get time I want to dynamically create the rsa keys for each election rather than using a pre-generated one this is more secure and a constructor param would be the modulus  so this paragraph here would have to change.
 To create an election the party must initialise the smart contract creating a new instance on the Ethereum blockchain. When initialising the contract, there are two inputs: the start time, and end time. These parameters are used to dictate when certain functions are allowed to be called by comparing it to the current block's timestamp. These parameters are all stored in this instance of the smart contract. The contract also stores the public key of the RSA key pair, for this implementation we used a constant key pair but the contract could also take the public key as a parameter, we used a static one to reduce transaction cost.
 
 \begin{figure}[h!]
@@ -345,6 +342,7 @@ Finally the smart contract provides a function to count the votes figure \ref{fi
 
 \pagebreak
 \section{Testing and Evaluation}
+For testing and evaluation we have used some values taken from the public Ethereum blockchain (ETC), these serve to give a general idea of how the application could function but these values do fluctuate over time and are not consistent across different implementations of the Ethereum blockchain.
 
 \subsection{Cost} \label{sec: cost}
 Ethereum smart contract transactions that change the state of the blockchain have an associated cost to them, measured in gas. This is a measurement of how difficult it is to run these transactions for the validators, if this smart contract was to be ran on a public Ethereum blockchain this would also be a measure of monetary cost. 
@@ -364,14 +362,40 @@ There are three functions that change the state of the blockchain, which can be 
 \end{tabular}
 \end{table}
 
-For gas price into ether we used the average gas price on the main Ethereum network (ETC) over a period of 60 days, this worked out at an average of \(12,442,000,000\) Wei or \(1.2442 \times 10^{-8}\) Ether. This value is used as a good approximation but in reality ETC prices and gas price are extremely volatile. These values were gathered on Etherscan \cite{gasprice} and a collection of the calculations can be found in the supplementary material. Another variable that affects these results is the state being written, candidate name is the only variable of unknown size for which we used a length of 10 characters.
+For gas price into ether we used the average gas price on the main Ethereum network (ETC) over a period of 60 days, this worked out at an average of \(12,442,000,000\) Wei or \(1.2442 \times 10^{-8}\) Ether. This value is used as an approximation because ETC prices and gas price are extremely volatile. These values were gathered on Etherscan \cite{gasprice} and a collection of the calculations can be found in the supplementary material. Another variable that affects these results is the state being written, candidate name is the only variable of unknown size for which we used a length of 10 characters.
 
-These results highlight a potential limitation for this application, high costs. At the time of writing ETC on the Ethereum public network is valued at £182 to 1ETC, this monetary cost becomes an issue when voting in large numbers. For example to set up an election with 10 candidates it will cost approximately 0.02591 ether or £1.25 using the conversion value above, but then per vote cast it costs an additional 82p. This will likely prevent this application being used on a public blockchain where Ethereum must be purchased as either the voter or the authority would have to pay to cast ballots. The cost to vote is high due to vote validation. When removing token validation the gas used dropped to 322,978 a decrease of over 40,000. This shows the expense of validation in this operation.
+These results highlight a potential limitation for this application, high costs. At the time of writing ETC on the Ethereum public network is valued at £182 to 1ETC, this monetary cost becomes an issue when voting in large numbers. For example to set up an election with 10 candidates it will cost approximately 0.02591 ether or £1.25 using the conversion value above, but then per vote cast it costs an additional 82p. This could prevent this application being used on a public blockchain where Ethereum must be purchased as either the voter or the authority would have to pay to cast ballots. Costs could be reduced by using this application on a private blockchains owned by the voting authority, or some other group which could charge a set value to host the validating nodes for the blockchain. 
+
+Importantly we should compare the cost of this application to other voting methods, in an article by the BBC \cite{costOfGE} the General Election of 2010 was estimated to cost £84,600,000 to conduct the poll. During which there were just under 46,000,000 registered voters and 4,150 candidates. To host this election using our protocol we will split the election into 650 local elections one for each constituency, we can see the cost analysis in the table below.
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{|c c c|}
+ \hline
+ Operation & Transactions & Total Ether \\ 
+ \hline
+ Contract Creation & 650 & 12.4215\\  
+ Add Candidate & 4,150 & 2.822\\  
+ Cast Ballot & \(4.6 \times 10^7\) & 207,460 \\  
+ \hline
+  & & 207,475 \\
+ \hline
+\end{tabular}
+\end{table}
+
+Using the above value of 207,477 ETC would mean to host this election using our application would have cost approximately £37,800,000 less than half the expenditure of the physical election. This cost analysis helps highlight that despite a high cost per vote, relatively to other systems this can still be a preferable option.
+
+\subsection{Scalability} \label{sec: scalability}
+Cost is a large factor in scalability, high costs are preventative for large scale applications. In this section we'll look at the other factors that limit application size.
+
+In the implementation there are two key variable that could max out on the smart contract. The first is the ballots cast which is stored in a mapping (Hashmap) and the other is candidates which is stored in an array. The array would max out at \(2^{256} -1 \) a limit far beyond any reasonable number of candidates. The ballots mapping stores values using a keccak256 hash, the maximum possible values stored in this hashmap is the same as the array but this value wouldn't be reached without a collision, but even at values exceeding \(10^10\) the chance of collision is lower than \(10^{-60}\) so this should not be a limiting factor either.
+
+Another factor for evaluating scalability is the transaction limit of the blockchain, Ethereum has a hard gas limit per block. The public Ethereum network at the time of writing generates a new block every 13.3 seconds on average \cite{ethscan} and has a gas limit of 8,000,000 \cite{gaslimit}. This gas limit is based on the processing power of the validators. Once this limit is reached no more transactions can be placed on the block. Using these values and the gas cost found in section \ref{sec: cost} there can be a maximum of 22 ballots (\(\frac{8000000}{362590}=22.06\)) cast every 13.3 seconds. Using the example of a general election we can estimate how long it would take to host that election. There were 46,000,000 registered voters in 2010 \cite{costOfGE} this would require a minimum of 2,090,910 blocks (\(\frac{46000000}{22}=2090909.09\)) which would take over 321 days on average (\(\frac{2090910 \times 13.3}{60*60*24}=321.86\)). This amount of time is a limiting factor for an election of this scale. The application could not then be held on the Ethereum public network, or likely any proof of work network, unless some way to increase the gas limit massively was added.
 
 \subsection{Unit Testing}
-Tests for the smart contract were written using Mocha \cite{mocha}. Mocha runs tests serially with an assert style testing mechanism, for which we are using Chai \cite{chai}. Below
+Tests for the smart contract were written using Mocha \cite{mocha}. Mocha runs tests serially with an assert style testing mechanism, for which we are using Chai \cite{chai}.
 
-These tests help show that the smart contract is behaving as expected, you can see the output for these tests in figure \ref{fig:testResults}.
+These tests help show that the smart contract is behaving as expected, you can see the output for these tests in figure \ref{fig:testResults}. This output indicates whether the test was successful, what was tested and the time taken to perform the test.
 
 \begin{figure}[h!]
     \centering
@@ -383,7 +407,7 @@ These tests help show that the smart contract is behaving as expected, you can s
 
 %show the gas pricing of each transaction
 %discuss the unit tests performed on the smart contracts
-%maybe latency would be a good idea
+%maybe latency would be a good idea, though testing that is extremely variable
 
 
 \subsection{Evaluation of Voting Properties}\label{sec: Eval}
@@ -399,13 +423,27 @@ These tests help show that the smart contract is behaving as expected, you can s
 
 
 \section{Conclusions and further work}
-During this project we have demonstrated a great deal about design choices, it is incredibly hard to include all the features you wish to without sacrificing the functionality already achieved. It is important to achieve primary goals first then evaluate potential additions. Beyond this we have shown the immense potential of blockchain technology, showing that it can be applied to problems outside of its original use to improve transparency and verifiability.
+Blockchain E-voting can provide a wide variety of properties to voting that were previously extremely hard to implement without forgoing other properties, beyond this it can increase interest and availability by providing an online voting service. During this project we have demonstrated that it is possible to achieve privacy on a blockchain by supplementing it with off-chain certification. This can be done whilst preserving the desirable transparency and security of the blockchain. 
 
-Uses for this application will likely be limited to small to medium scale distributed elections. The difficulties posed by this protocol as discussed in section \ref{sec:eval} and section \ref{sec: cost} make it unforgiving to voters that make mistakes in the protocol and expensive leaving it unsuitable for large scale elections. Alternatives do exist to circumvent this having signed tokens assigned for each voter but this would forgo the privacy granted by blind signing.
+Uses for this application range from small to medium scale distributed elections on public blockchains, due to the scalability issues discussed in section \ref{sec: scalability}, or elections of any scale on permissioned blockchains where the gas limit can be increased. Blockchain is an incredibly versatile technology but transaction throughput is a noted limitation that if addressed would greatly increase the use cases of various applications including this one.
 
-In the future I would like to try add voter fairness, looking at alternative ways to provide this without drastically decreasing usability. Another improvement I think could be made is trying to integrate Elliptic curve cryptography (ECC) instead of RSA, many blockchains are built using ECC, for address and signing. Ethereum uses the Elliptic Curve Digital Signature Algorithm (ECDSA) because of the reduced key sizes required for the algorithm. This would be an interesting area for further investigation, built-in support and smaller keys could make for cheaper transaction costs as seen in section \ref{sec: cost} and more manageable key sizes for users.
+The difficulties posed by this protocol as discussed in section \ref{sec:eval} and section \ref{sec: cost} make it unforgiving to voters that make mistakes in the protocol. This could make the application unsuitable without correct training to use the application, alternatives do exist to circumvent this. Having signed tokens assigned for each voter would negate the ability to lose a token but this would forgo the extra privacy granted by blind signing.
 
-This method of E-Voting demonstrates interesting solutions to problems posed by public voting. It is impossible to say whether this is preferable to existing physical or digital system, but it is different and serves to provide a valid alternative. 
+\subsection{Aims and Objectives}
+{\bf Aim}: Our aim was "To investigate and implement a blockchain E-Voting algorithm that implements methods to ensure Privacy, Verifiability, Availability, and Robustness." we have demonstrated and discussed how Verifiability is provided by the blockchain and privacy is provided through  
+
+{\bf Objectives}
+\begin{enumerate}
+    \item Identify desirable properties of voting and metrics for evaluation. In section \ref{sec: voting} we discussed voting properties for evaluation. Identifying which ones we wanted to achieve and which ones were most important for our aim.
+    \item Design and Implement a basic application for voting. We achieved this in the Design and Implementation section, demonstrating the correctness of this solution in the Testing and Evaluation section.
+    \item Extend the application to include the desirable properties. For the properties we achieved this was done in Design and Implementation. We then evaluated each of our desirable properties in section \ref{}
+    \item Evaluate and compare to other solutions. In sections \ref{sec: cost} and \ref{sec: scalability} in Testing and Evaluation we compared our application to a General Election. We found that although the cost was lower the actual application might be unrealistic to deploy due to the gas limit 
+\end{enumerate}
+
+
+In the future we would like to try add voter fairness, looking at alternative ways to provide this without drastically decreasing usability. Another improvement I think could be made is trying to integrate Elliptic curve cryptography (ECC) instead of RSA, many blockchains are built using ECC, for address and signing. Ethereum uses the Elliptic Curve Digital Signature Algorithm (ECDSA) because of the reduced key sizes required for the algorithm. This would be an interesting area for further investigation, built-in support and smaller keys could make for cheaper transaction costs as seen in section \ref{sec: cost} and more manageable key sizes for users when generating tokens and blinding factors.
+
+This application demonstrates a single method  of E-Voting demonstrates interesting solutions to problems posed by public voting. It is impossible to say whether this is preferable to existing physical or digital system, but it is different and serves to provide a valid alternative. 
 
 \printbibliography
 
