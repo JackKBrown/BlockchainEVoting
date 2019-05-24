@@ -176,7 +176,7 @@ An implementation of a Solidity compiler for Ethereum. Available on Node.js, it 
 %This was an obvious choice for me as it included a lot of the packages and tools I needed together and ready working with decent documentation but need to show also why this was greater than the alternatives
 \subsection{Java}
 %https://github.com/ethereum/ethereumj
-The EthereumJ project is an implementation of the Ethereum yellow paper of java. It is fully compatible with maven to deploy the project as a web application. Advantages of using this system are the ability to utilize the many libraries in java which all work perfectly cross platform due to the Java Virtual Machine and the support available for this language due to its popularity. The difficulty of this is that this would also require considerable amounts of a client side scripting language such as JavaScript too to implement parts of the protocol with more sensitive content, which would undermine the reason of using EthereumJ if you need to resort to another platform. 
+The EthereumJ \cite{EthereumJ} project is an implementation of the Ethereum yellow paper of java. It is fully compatible with maven to deploy the project as a web application. Advantages of using this system are the ability to utilize the many libraries in java which all work perfectly cross platform due to the Java Virtual Machine and the support available for this language due to its popularity. The difficulty of this is that this would also require considerable amounts of a client side scripting language such as JavaScript too to implement parts of the protocol with more sensitive content, which would undermine the reason of using EthereumJ if you need to resort to another platform. 
 
 \subsubsection{Others}
 \begin{itemize}
@@ -185,7 +185,7 @@ The EthereumJ project is an implementation of the Ethereum yellow paper of java.
 \end{itemize}
 
 \subsubsection{Conclusion}
-For the smart contract we used the Truffle framework this was preferable for the built-in support for its own testRPC Ganache allowing for faster development. Beyond this it includes its own javascript libraries based off Web3.0 for interacting with contracts, making it much easier to develop a web application for our smart contract. Truffle also includes tools for unit testing smart contracts which isolate functions between different tests which can be useful to prevent false negatives when testing.
+For the smart contract we used the Truffle framework this was preferable for the built-in support for its own testRPC Ganache allowing for faster development. Beyond this it includes its own JavaScript libraries based off Web3.0 for interacting with contracts, making it much easier to develop a web application for our smart contract. Truffle also includes tools for unit testing smart contracts which isolate functions between different tests which can be useful to prevent false negatives when testing.
 
 
 %\pagebreak
@@ -202,8 +202,10 @@ This protocol uses an Ethereum blockchain to allow for public verifiability and 
     \item \textbf{Voting and Counting Phase}. Everyone with a valid signed token can vote at this point. To do this they construct a ballot and broadcast it to the blockchain. Ballots can be cast between the allotted times as dictated at creation. Votes can be counted at any point after the start time.
 \end{enumerate}
 
+This protocol helps us achieve several properties, the blockchain allows us to store all the information publicly allowing for E2E-Verifiability by analysing the transaction on the block or calling the smart contract for ballot information. The protocol also adds a public count method that allows for universal verifiability. Privacy is achieved using blind signatures, the token proves eligibility without revealing any information about the voter.
+
 \subsection{Interfacing between components}
-There are three factors that need to communicate in this application: the client, the server (web application), and blockchain (smart contract). In figure \ref{fig:communication}, we have shown the proposed communications between these factors. We see the initialisation, authorisation, voting and counting protocols. This diagram demonstrates that the server at no point directly contacts the blockchain. All smart contract calls are done from the client side using JavaScript.
+There are three factors that need to communicate in this application: the client, the server (web application), and blockchain (smart contract). In figure \ref{fig:communication}, we have shown the proposed communications between these factors. We see the initialisation, authorisation, voting and counting protocols. This diagram demonstrates that the server at no point directly contacts the blockchain. All smart contract calls are done from the client side using JavaScript, this is important as it means no potentially identifying information about the voters Ethereum address is sent to the authority which could be used to violate privacy.
 
 Although the server initialises each section in the diagram, the client would typically send a request first which has been excluded from diagram for brevity. 
 
@@ -436,14 +438,17 @@ The difficulties posed by this protocol as discussed in section \ref{sec:eval} a
 \begin{enumerate}
     \item Identify desirable properties of voting and metrics for evaluation. In section \ref{sec: voting} we discussed voting properties for evaluation. Identifying which ones we wanted to achieve and which ones were most important for our aim.
     \item Design and Implement a basic application for voting. We achieved this in the Design and Implementation section, demonstrating the correctness of this solution in the Testing and Evaluation section.
-    \item Extend the application to include the desirable properties. For the properties we achieved this was done in Design and Implementation. We then evaluated each of our desirable properties in section \ref{}
-    \item Evaluate and compare to other solutions. In sections \ref{sec: cost} and \ref{sec: scalability} in Testing and Evaluation we compared our application to a General Election. We found that although the cost was lower the actual application might be unrealistic to deploy due to the gas limit 
+    \item Extend the application to include the desirable properties. For the properties we achieved this was done in Design and Implementation. We then evaluated and discussed each of our desirable properties in section \ref{sec: Eval} as to whether they had been achieved.
+    \item Evaluate and compare to other solutions. In sections \ref{sec: cost} and \ref{sec: scalability} in Testing and Evaluation we compared our application to a General Election. We found that although the cost was lower the actual application might be unrealistic to deploy due to the gas limit. Leaving us to recommend that in larger scale elections despite potentially lower costs other systems should be sought after.
 \end{enumerate}
 
+\subsection{Future work}
+In the future we would like to try add voter fairness, looking at alternative ways to provide this without drastically decreasing usability. We chose not to include fairness due to being unable to find an adequate way of adding the feature without reducing usability and time restrictions limited the time we could invest into this. Beyond this further work could also be done on improving security, further evaluation and a more rigorous process for finding security flaws.
 
-In the future we would like to try add voter fairness, looking at alternative ways to provide this without drastically decreasing usability. Another improvement I think could be made is trying to integrate Elliptic curve cryptography (ECC) instead of RSA, many blockchains are built using ECC, for address and signing. Ethereum uses the Elliptic Curve Digital Signature Algorithm (ECDSA) because of the reduced key sizes required for the algorithm. This would be an interesting area for further investigation, built-in support and smaller keys could make for cheaper transaction costs as seen in section \ref{sec: cost} and more manageable key sizes for users when generating tokens and blinding factors.
+Another potential improvement that could be made is trying to integrate Elliptic curve cryptography (ECC) instead of RSA, many blockchains are built using ECC, for address and signing. Ethereum uses the Elliptic Curve Digital Signature Algorithm (ECDSA) because of the reduced key sizes required for the algorithm. This would be an interesting area for further investigation, built-in support and smaller keys could make for cheaper transaction costs as seen in section \ref{sec: cost} and more manageable key sizes for users when generating tokens and blinding factors.
 
-This application demonstrates a single method  of E-Voting demonstrates interesting solutions to problems posed by public voting. It is impossible to say whether this is preferable to existing physical or digital system, but it is different and serves to provide a valid alternative. 
+\subsection{closing statement}
+This application demonstrates a single method of E-Voting showing that even within the confines of a particular subsection of E-Voting there can be a plethora of significant choices that can subtly affect the final outcome of a protocol and application. Due to this minutiae of differences in protocols and changing requirements between different elections this application can find use where high transparency is required as well as high privacy as a valid alternative.
 
 \printbibliography
 
